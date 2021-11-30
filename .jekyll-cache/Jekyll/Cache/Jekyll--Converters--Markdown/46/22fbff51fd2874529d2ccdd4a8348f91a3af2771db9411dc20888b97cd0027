@@ -1,0 +1,26 @@
+I"�<hr />
+
+<p><br /></p>
+
+<h3 id="primeros-pasos---">PRIMEROS PASOS . . .</h3>
+
+<p>Primer día que termino unas máquinas de <strong>HTB</strong>. La parte de credenciales es bastante sencilla, siempre es logearse con root y sin contraseña.
+Se centra más en conocer los servicios más comunes, analisis de puertos y saber que te encuentras.
+Me encontré con vulnerabilidades en telnet, ssh, ftp, smb, y sql. A veces la gente pone cualquier contraseña y suponen que nunca va a pasar nada.</p>
+
+<p><br />
+<br /></p>
+
+<h3 id="herramientas-útiles">HERRAMIENTAS ÚTILES:</h3>
+
+<p><strong>Ping</strong>: mitica para saber si conectamos con otra máquina. El ttl nos dice si la máquina <em>victima</em> es Linux(~64) o Windows(~128).</p>
+
+<p><strong>Nmap</strong>: para rastrear los puertos. Una de las más utilizadas sin duda. Tiene miles de paramétros. Yo he usados estos: <code class="language-plaintext highlighter-rouge">nmap -p- --open -T5 -v -n {IP}</code> o <code class="language-plaintext highlighter-rouge">nmap -sC -sV -n {IP}</code>.</p>
+
+<p><strong>whatweb</strong>: Nos da información sobre la página web. Esta muy interesante: <code class="language-plaintext highlighter-rouge">whatweb http://{IP} -v</code></p>
+
+<p><strong>wfuzz</strong>: herramienta de fuzzing para webs. Un tipo de fuerza bruta para sacar directorios: <code class="language-plaintext highlighter-rouge">wfuzz -c --hc=404 -t 200 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt http://{IP}</code></p>
+
+<p><strong>gobuster</strong>: parecido a wfuzz. <code class="language-plaintext highlighter-rouge">gobuster dir --url http://{IP} --wordlist /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</code></p>
+
+:ET

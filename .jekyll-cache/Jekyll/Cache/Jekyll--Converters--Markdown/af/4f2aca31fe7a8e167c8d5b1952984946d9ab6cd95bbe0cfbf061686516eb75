@@ -1,0 +1,42 @@
+I"�<hr />
+
+<p><br /></p>
+
+<h3 id="curso-de-mastermind-primera-parte-conceptos-básicos">CURSO DE MASTERMIND PRIMERA PARTE: Conceptos básicos.</h3>
+
+<h4 id="1-permisos-en-linux">1. Permisos en Linux.</h4>
+
+<p>drwxr-xr-x n1k3t0 n1k3t0 90 B Fri Nov 19 13:00:34 2021  fondos</p>
+
+<p>d -&gt; Directorio</p>
+
+<p>rwx rwx rwx
+ P   G   O
+r -&gt; read
+w -&gt; write
+x -&gt; f:executable | d: atravesar (cd directorio)</p>
+
+<p><br /></p>
+
+<p><br /></p>
+<h4 id="2-explotación-de-permisos-suid">2. Explotación de permisos SUID.</h4>
+
+<p>Si hago, siendo root, un <strong>which find | xargs ls -l</strong> me muestra los permisos que tengo sobre dicho comando.
+No tiene permisos SUID por lo que hacemos <strong>chmod 4755 /usr/bin/find</strong>. Compruebo los permisos ahora y sale esto:
+<code class="language-plaintext highlighter-rouge">-rwsr-xr-x 1 root root 311008 jan  9  2021 /usr/bin/find</code>
+Visito la página <em>https://gtfobins.github.io</em> que ayuda mucho para explotar y escalar privilegios.
+Para el comando find, puedo ser root sin proporcionar contraseña con el comando <code class="language-plaintext highlighter-rouge">find . -exec /bin/sh -p \; -quit</code></p>
+
+<p>Hay muchos más comandos de los que podemos escalar privilegios.</p>
+
+<p><br /></p>
+
+<p><br /></p>
+<h4 id="3-explotación-de-tareas-cron">3. Explotación de tareas Cron.</h4>
+
+<p><br /></p>
+
+<p><br /></p>
+
+<h4 id="4-explotación-de-un-path-hijacking-frente-a-un-binario-suid">4. Explotación de un PATH Hijacking frente a un binario SUID.</h4>
+:ET
